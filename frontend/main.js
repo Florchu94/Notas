@@ -3,70 +3,119 @@ const form = document.getElementById('noteForm');
 const container = document.getElementById('notesContainer');
 
 // Crear nota
-form.addEventListener('submit', async (e) => {
-	e.preventDefault();
-	const title = document.getElementById('title').value;
-	const content = document.getElementById('content').value;
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const title = document.getElementById('title').value.trim();
+  const content = document.getElementById('content').value.trim();
 
-	const response = await fetch(API_URL, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ title, content }),
-	});
+  if (!title || !content) {
+    alert('Por favor completá todos los campos antes de guardar la nota.');
+    return;
+  }
 
-	if (response.ok) {
-		form.reset();
-		fetchNotes();
-	}
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, content }),
+    });
+
+    if (!response.ok) throw new Error('Error al crear la nota');
+    form.reset();
+    fetchNotes();
+  } catch (error) {
+    alert('Ocurrió un error al crear la nota.');
+    console.error(error);
+  }
 });
 
 // Obtener notas
 const fetchNotes = async () => {
-	container.innerHTML = '';
-	const res = await fetch(API_URL);
-	const notes = await res.json();
+  container.innerHTML = '';
 
-	notes.forEach((note) => {
-		const div = document.createElement('div');
-		div.className = 'note';
-		div.innerHTML = `
-      <h3>${note.title}</h3>
-      <p>${note.content}</p>
-      <div class="note-actions">
-        <button onclick="editNote('${note.id}', '${note.title}', \`${note.content}\`)">Editar</button>
-        <button onclick="deleteNote('${note.id}')">Eliminar</button>
-      </div>
-    `;
-		container.appendChild(div);
-	});
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error('Error al obtener las notas');
+
+    const notes = await res.json();
+
+    notes.forEach(note => {
+      const div = document.createElement('div');
+      div.className = 'note';
+
+      const title = document.createElement('h3');
+      title.textContent = note.title;
+
+      const content = document.createElement('p');
+      content.textContent = note.content;
+
+      const actions = document.createElement('div');
+      actions.className = 'note-actions';
+
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Editar';
+      editBtn.onclick = () => editNote(note.id, note.title, note.content);
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Eliminar';
+      deleteBtn.onclick = () => deleteNote(note.id);
+
+      actions.appendChild(editBtn);
+      actions.appendChild(deleteBtn);
+
+      div.appendChild(title);
+      div.appendChild(content);
+      div.appendChild(actions);
+
+      container.appendChild(div);
+    });
+  } catch (error) {
+    alert('No se pudieron cargar las notas.');
+    console.error(error);
+  }
 };
 
 fetchNotes();
 
-// Eliminar notas
-const deleteNote = async (id) => {
-	const confirmDelete = confirm(
-		'¿Estás segura de que querés eliminar esta nota?'
-	);
-	if (!confirmDelete) return;
+// Eliminar nota
+const deleteNote = async id => {
+  const confirmDelete = confirm('¿Estás segura de que querés eliminar esta nota?');
+  if (!confirmDelete) return;
 
-	const res = await fetch(`${API_URL}/${id}`, {
-		method: 'DELETE',
-	});
+  try {
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: 'DELETE',
+    });
 
-	if (res.ok) fetchNotes();
+    if (!res.ok) throw new Error('Error al eliminar la nota');
+    fetchNotes();
+  } catch (error) {
+    alert('No se pudo eliminar la nota.');
+    console.error(error);
+  }
 };
 
+// Editar nota
 const editNote = async (id, currentTitle, currentContent) => {
-	const title = prompt('Nuevo título:', currentTitle);
-	const content = prompt('Nuevo contenido:', currentContent);
-	if (!title || !content) return;
+  const title = prompt('Nuevo título:', currentTitle);
+  const content = prompt('Nuevo contenido:', currentContent);
 
-	const res = await fetch(`${API_URL}/${id}`, {
-		method: 'PUT',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ title, content }),
-	});
+  if (!title?.trim() || !content?.trim()) {
+    alert('El título y el contenido no pueden estar vacíos.');
+    return;
+  }
 
-	if (res.ok) fetchNotes();
+  try {
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: title.trim(), content: content.trim() }),
+    });
+
+    if (!res.ok) throw new Error('Error al editar la nota');
+    fetchNotes();
+  } catch (error) {
+    alert('No se pudo editar la nota.');
+    console.error(error);
+  }
 };
