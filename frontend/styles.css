@@ -54,3 +54,24 @@ button:hover {
 	margin-bottom: 1rem;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
+
+.note-actions {
+	margin-top: 1rem;
+	display: flex;
+	gap: 0.5rem;
+}
+
+.note-actions button {
+	flex: 1;
+	padding: 0.5rem;
+	font-size: 0.9rem;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	background-color: #dfe6e9;
+	transition: background-color 0.2s ease;
+}
+
+.note-actions button:hover {
+	background-color: #b2bec3;
+}
