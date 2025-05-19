@@ -9,7 +9,11 @@ form.addEventListener('submit', async e => {
   const content = document.getElementById('content').value.trim();
 
   if (!title || !content) {
-    alert('Por favor completá todos los campos antes de guardar la nota.');
+    Swal.fire({
+      icon: 'warning',
+      title: 'Campos vacíos',
+      text: 'Por favor completá todos los campos antes de guardar la nota.',
+    });
     return;
   }
 
@@ -24,7 +28,11 @@ form.addEventListener('submit', async e => {
     form.reset();
     fetchNotes();
   } catch (error) {
-    alert('Ocurrió un error al crear la nota.');
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Ocurrió un error al crear la nota.',
+    });
     console.error(error);
   }
 });
@@ -79,8 +87,16 @@ fetchNotes();
 
 // Eliminar nota
 const deleteNote = async id => {
-  const confirmDelete = confirm('¿Estás segura de que querés eliminar esta nota?');
-  if (!confirmDelete) return;
+  const result = await Swal.fire({
+    title: '¿Eliminar esta nota?',
+    text: 'Esta acción no se puede deshacer.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+  });
+
+  if (!result.isConfirmed) return;
 
   try {
     const res = await fetch(`${API_URL}/${id}`, {
@@ -88,34 +104,52 @@ const deleteNote = async id => {
     });
 
     if (!res.ok) throw new Error('Error al eliminar la nota');
+
+    Swal.fire('Eliminada', 'La nota fue eliminada.', 'success');
     fetchNotes();
   } catch (error) {
-    alert('No se pudo eliminar la nota.');
+    Swal.fire('Error', 'No se pudo eliminar la nota.', 'error');
     console.error(error);
   }
 };
 
 // Editar nota
 const editNote = async (id, currentTitle, currentContent) => {
-  const title = prompt('Nuevo título:', currentTitle);
-  const content = prompt('Nuevo contenido:', currentContent);
+  const { value: formValues } = await Swal.fire({
+    title: 'Editar nota',
+    html: `
+      <input id="swal-input1" class="swal2-input" value="${currentTitle}" placeholder="Título">
+      <textarea id="swal-input2" class="swal2-textarea" placeholder="Contenido">${currentContent}</textarea>
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: 'Guardar',
+    cancelButtonText: 'Cancelar',
+    preConfirm: () => {
+      const title = document.getElementById('swal-input1').value.trim();
+      const content = document.getElementById('swal-input2').value.trim();
+      if (!title || !content) {
+        Swal.showValidationMessage('El título y el contenido no pueden estar vacíos.');
+        return;
+      }
+      return { title, content };
+    },
+  });
 
-  if (!title?.trim() || !content?.trim()) {
-    alert('El título y el contenido no pueden estar vacíos.');
-    return;
-  }
+  if (!formValues) return;
 
   try {
     const res = await fetch(`${API_URL}/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: title.trim(), content: content.trim() }),
+      body: JSON.stringify(formValues),
     });
 
     if (!res.ok) throw new Error('Error al editar la nota');
+    Swal.fire('Actualizada', 'La nota fue modificada con éxito.', 'success');
     fetchNotes();
   } catch (error) {
-    alert('No se pudo editar la nota.');
+    Swal.fire('Error', 'No se pudo editar la nota.', 'error');
     console.error(error);
   }
 };
