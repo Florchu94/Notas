@@ -1,5 +1,3 @@
-// backend/index.js
-
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -22,19 +20,19 @@ connectToDatabase();
 
 // Sincronizar modelos
 sequelize
-	.sync({ force: false }) // Cambiar a true solo si querés forzar recreación
-	.then(() => console.log('🗂️ Modelos sincronizados con la base de datos'))
-	.catch((err) => console.error('❌ Error al sincronizar modelos:', err));
+  .sync({ force: false }) // Cambiar a true solo si querés forzar recreación
+  .then(() => console.log('🗂️ Modelos sincronizados con la base de datos'))
+  .catch(err => console.error('❌ Error al sincronizar modelos:', err));
 
 // Ruta de prueba
 app.get('/', (req, res) => {
-	res.send('API de notas funcionando 🔖');
+  res.send('API de notas funcionando 🔖');
 });
 
 // Arrancar el servidor
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-	console.log(`🚀 Servidor escuchando en http://localhost:${PORT}`);
+  console.log(`🚀 Servidor escuchando en http://localhost:${PORT}`);
 });
 
 // Exportar app y sequelize
