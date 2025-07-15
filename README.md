@@ -4,7 +4,7 @@ Este proyecto es una aplicación web de notas construida como parte del challeng
 
 ---
 
-## 🚀 Cómo ejecutar el proyecto
+## Cómo ejecutar el proyecto
 
 1. **Clonar el repositorio**
 
@@ -27,7 +27,7 @@ DB_PORT=5432
 
 3. **Ejecutar el script de instalación (`setup.sh`)**
 
-### 🛠️ Este proyecto incluye un script para automatizar el proceso de instalación del backend.
+### Este proyecto incluye un script para automatizar el proceso de instalación del backend.
 
 **Pasos para usarlo:**
 
@@ -53,7 +53,7 @@ El script instalará las dependencias del backend, ejecutará index.js para sinc
 
 ---
 
-## 📂 Estructura del proyecto
+## Estructura del proyecto
 
 ```bash
 Cejas-a71fa2/
@@ -89,7 +89,7 @@ Cejas-a71fa2/
 
 ---
 
-## 🛠️ Tecnologías utilizadas
+## Tecnologías utilizadas
 
 - **Backend:** Node.js, Express, Sequelize, PostgreSQL
 - **Frontend:** HTML5, CSS3, JavaScript
@@ -97,7 +97,7 @@ Cejas-a71fa2/
 
 ---
 
-## ✨ Funcionalidades implementadas (Fase obligatoria)
+## Funcionalidades implementadas (Fase obligatoria)
 
 - Crear notas
 - Visualizar todas las notas
@@ -108,7 +108,7 @@ Las notas se almacenan en una base de datos PostgreSQL mediante Sequelize ORM.
 
 ---
 
-## 📸 Capturas de pantalla
+## Capturas de pantalla
 
 A continuación se muestran algunas capturas del funcionamiento de la app:
 
@@ -118,49 +118,49 @@ A continuación se muestran algunas capturas del funcionamiento de la app:
 
 ---
 
-### ➕ Creación de una nueva nota
+### Creación de una nueva nota
 
 Formulario con título y contenido completado, listo para ser enviado.
 ![Creación de nota](frontend/assets/nota_creada.png)
 
 ---
 
-### ✅ Nota creada correctamente
+### Nota creada correctamente
 
 La nota aparece al final de la lista luego de enviarla.
 ![Nota creada](frontend/assets/nota_creada.png)
 
 ---
 
-### 📝 Edición de una nota existente
+### Edición de una nota existente
 
 Prompt activo para modificar una nota seleccionada.
 ![Edición de nota](frontend/assets/editar_nota.png)
 
 ---
 
-### ❌ Eliminación de una nota
+### Eliminación de una nota
 
 Mensaje de confirmación antes de eliminar una nota.
 ![Eliminación de nota](frontend/assets/nota_eliminada.png)
 
 ---
 
-### ⚙️ Backend corriendo en consola
+### Backend corriendo en consola
 
 El servidor Express está activo y sin errores en el puerto 3001.
 ![Backend corriendo](frontend/assets/Backend_run.png)
 
 ---
 
-### 💾 Base de datos funcionando
+### Base de datos funcionando
 
 Vista de la tabla `Notes` en pgAdmin o herramienta similar.
 ![Base de datos](frontend/assets/cejas_db.png)
 
 ---
 
-## 🌐 Vista pública del proyecto
+## Vista pública del proyecto
 
 Podés ver una demo en vivo de la app en:
 
